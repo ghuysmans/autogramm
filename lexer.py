@@ -16,7 +16,7 @@ def t_BLOCK(t):
 	#TODO handle this nicely
 	t.lexer.begin('gramm')
 	return t
-t_PYTHON = '.+'
+t_PYTHON = '.[^\'"\n]*'
 
 t_gramm_ignore = ' \t'
 t_gramm_VARIABLE = '[a-z_][a-zA-Z0-9_]*'
