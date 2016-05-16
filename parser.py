@@ -17,13 +17,13 @@ def p_program(p):
 
 def p_block(p):
 	'''
-	block	: BLOCK rules BLOCK
+	block	: BLOCK NL rules BLOCK
 	'''
 	pass
 
 def p_rules(p):
 	'''
-	rules	: rule NL rules
+	rules	: rule rules
 			| rule
 	'''
 	pass
@@ -37,7 +37,8 @@ def p_rule(p):
 def p_disj(p):
 	'''
 	disj	: terms NL OR disj
-			| terms
+			| terms NL
+			| NL
 	'''
 	pass
 
@@ -45,7 +46,8 @@ def p_terms(p):
 	'''
 	terms	: VARIABLE terms
 			| TOKEN terms
-			|
+			| VARIABLE
+			| TOKEN
 	'''
 	pass
 
