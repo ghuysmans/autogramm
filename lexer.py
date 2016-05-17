@@ -36,7 +36,7 @@ def t_error(t):
 	assert(False)
 def t_gramm_error(t):
 	where = "at line "+str(t.lexer.lineno)
-	print >>sys.stdout, "Illegal character", repr(t.value[0]), where
+	print >>sys.stderr, "Illegal character", repr(t.value[0]), where
 	t.lexer.skip(1)
 
 lex = lex.lex()
