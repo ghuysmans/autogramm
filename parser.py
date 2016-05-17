@@ -1,6 +1,7 @@
 definitions = {}
 
 
+import sys
 from ply import yacc
 from lexer import lex, tokens
 
