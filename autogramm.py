@@ -7,6 +7,9 @@ def to_gv():
 	to_gv_r(axiom)
 	print "}"
 
+def quote(s):
+	return '"%s"' % s
+
 def to_gv_r(v):
 	#Update v's counter and print it using a unique identfier.
 	#Terminal symbols are added here to simplify the functions above.
@@ -21,7 +24,7 @@ def to_gv_r(v):
 	id = d.name(v) #unique dot identifier
 	if d.used == 1:
 		#first time
-		print id+";" #no need to use the label attribute
+		print quote(id)+";" #no need to use the label attribute
 		for i, option in enumerate(d.rules):
 			if len(d.rules) == 1:
 				#there is just one possible derivation
@@ -31,24 +34,24 @@ def to_gv_r(v):
 				#there are multiple ways of derivating v
 				#let's assign a number to each of them
 				opt = id+"_o"+str(i)
-				print opt, "[label=\"%d\"];"%i
-				print id, "->", opt, "[style=dashed];"
+				print quote(opt), "[label=\"%d\"];"%i
+				print quote(id), "->", quote(opt), "[style=dashed];"
 			if option == None:
 				#epsilon
 				to_gv_r(None)
-				print opt, "->", definitions[None].name(None), ";"
+				print quote(opt), "->", quote(definitions[None].name(None)), ";"
 			else:
 				for symbol in option:
 					other = to_gv_r(symbol)
-					print opt, "->", other, ";"
+					print quote(opt), "->", quote(other), ";"
 					is_var = symbol[0].islower()
 					explored = definitions[symbol].used>1
 					#TODO understand why this test is even needed
 					diff = other!=symbol #avoid loops
 					if is_var and explored and args.back and diff:
-						print other, "->", symbol, "[style=dashed];"
+						print quote(other), "->", quote(symbol), "[style=dashed];"
 	else:
-		print id, "[label=\"%s\"];"%v
+		print quote(id), "[label=\"%s\"];"%v
 	return id
 
 

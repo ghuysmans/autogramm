@@ -16,7 +16,7 @@ class Definition(object):
 		self.used = 0
 	def name(self, prefix):
 		assert(self.used > 0)
-		s = "\"&epsilon;\"" if prefix==None else str(prefix)
+		s = "&epsilon;" if prefix==None else str(prefix)
 		return s+("" if self.used==1 else str(self.used))
 
 def p_programP(p):
