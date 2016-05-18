@@ -22,9 +22,11 @@ def to_gv_r(v):
 	d = definitions[v] #shortcut
 	d.used += 1
 	id = d.name(v) #unique dot identifier
+	if v == None:
+		v = "&epsilon;"
+	print quote(id), "[label=\"%s\"];"%v
 	if d.used == 1:
 		#first time
-		print quote(id)+";" #no need to use the label attribute
 		for i, option in enumerate(d.rules):
 			if len(d.rules) == 1:
 				#there is just one possible derivation
@@ -37,21 +39,18 @@ def to_gv_r(v):
 				print quote(opt), "[label=\"%d\"];"%i
 				print quote(id), "->", quote(opt), "[style=dashed];"
 			if option == None:
-				#epsilon
-				to_gv_r(None)
-				print quote(opt), "->", quote(definitions[None].name(None)), ";"
-			else:
-				for symbol in option:
-					other = to_gv_r(symbol)
-					print quote(opt), "->", quote(other), ";"
-					is_var = symbol[0].islower()
-					explored = definitions[symbol].used>1
-					#TODO understand why this test is even needed
-					diff = other!=symbol #avoid loops
-					if is_var and explored and args.back and diff:
-						print quote(other), "->", quote(symbol), "[style=dashed];"
-	else:
-		print quote(id), "[label=\"%s\"];"%v
+				#hack to avoid redundancy
+				option = [None]
+			for symbol in option:
+				other = to_gv_r(symbol)
+				print quote(opt), "->", quote(other), ";"
+				is_var = symbol!=None and symbol[0].islower()
+				explored = definitions[symbol].used>1
+				#TODO understand why this test is even needed
+				diff = other!=symbol #avoid loops
+				if is_var and explored and args.back and diff:
+					print quote(other), "->", quote(symbol), "[style=dashed];"
+	print >>sys.stderr, "returning", repr(id)
 	return id
 
 
