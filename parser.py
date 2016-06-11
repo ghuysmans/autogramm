@@ -6,8 +6,8 @@ from ply import yacc
 from lexer import lex, tokens
 
 precedence = (
-	('left', 'NL'),
 	('left', 'OR'),
+	('left', 'NL'),
 )
 
 class Definition(object):
@@ -18,12 +18,6 @@ class Definition(object):
 		assert(self.used > 0)
 		idx = "" if self.used==1 else str(self.used)
 		return str(prefix) + idx
-
-def p_programP(p):
-	'''
-	program : PYTHON program
-	'''
-	p[0] = p[2]
 
 def p_programB(p):
 	'''
@@ -39,13 +33,14 @@ def p_programE(p):
 
 def p_block(p):
 	'''
-	block : BLOCK NL rules BLOCK
+	block : BLOCK rules BLOCK
 	'''
-	p[0] = p[3]
+	p[0] = p[2]
 
 def p_rules(p):
 	'''
-	rules	: rule rules
+	rules	: rule NL rules
+			| rule NL
 			| rule
 	'''
 	p[0] = p[1]
@@ -61,21 +56,21 @@ def p_rule(p):
 
 def p_disjE(p):
 	'''
-	disj : NL
+	disj :
 	'''
 	p[0] = [None]
 
 def p_disjB(p):
 	'''
-	disj : terms NL
+	disj : terms
 	'''
 	p[0] = [p[1]]
 
 def p_disjI(p):
 	'''
-	disj : terms NL OR disj
+	disj : terms OR disj
 	'''
-	p[0] = [p[1]] + p[4]
+	p[0] = [p[1]] + p[3]
 
 def p_termsB(p):
 	'''
