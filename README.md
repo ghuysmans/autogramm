@@ -7,14 +7,22 @@ autogram generates a DOT ([GraphViz](http://graphviz.org/)) script
 you can fairly easily customize
 to produce some nice PostScript output.
 
-## Example
-Simplified XML parser ([included](sml.py)):
+## Examples
+### Simplified XML parser
 ```
 autogramm.py sml.py|dot -Tps >sml.ps
 ```
 yields
 
 [![SML graph](sml.png?raw=true)](sml.dot?raw=true)
+
+### Simplified C function definition parser
+```
+autogramm.py fp.py|dot -Tps >fp.ps
+```
+yields
+
+[![FP graph](fp.png?raw=true)](fp.dot?raw=true)
 
 ## Usage
 ```
