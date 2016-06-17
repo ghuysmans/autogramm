@@ -87,23 +87,21 @@ def p_funcT(p):
 	'''
 	p[0] = Indirect(p[2].indirection, Function(p[1], p[2].data, p[4]))
 
-def p_funcA(p):
+def p_type(p):
 	'''
-	arg : type name LPAR args RPAR
+	type : simple
 	'''
-	#needed since there's no name after this (since it's inside the type)!
-	f = Function(p[1], p[2].data, p[4])
-	p[0] = Argument(Indirect(p[2].indirection, f), p[2].data)
+	p[0] = p[1]
 
-def p_primitive(p):
+def p_simple(p):
 	'''
-	type : ID
+	simple : ID
 	'''
 	p[0] = Indirect(0, p[1])
 
-def p_tptr(p):
+def p_simpleP(p):
 	'''
-	type : type STAR
+	simple : simple STAR
 	'''
 	p[0] = Indirect(p[1].indirection+1, p[1].data)
 
@@ -127,10 +125,19 @@ def p_nptr(p):
 
 def p_argument(p):
 	'''
-	arg : type name
+	arg	: type name
+		| type
 	'''
-	indirection = p[1].indirection+p[2].indirection
-	p[0] = Argument(Indirect(indirection, p[1].data), p[2].data)
+	if len(p) == 3:
+		indirection = p[1].indirection+p[2].indirection
+		name = p[2].data
+	else:
+		indirection = p[1].indirection
+		if isinstance(p[1].data, Function):
+			name = p[1].data.name
+		else:
+			name = "<anonymous>"
+	p[0] = Argument(Indirect(indirection, p[1].data), name)
 
 def p_args(p):
 	'''
@@ -168,5 +175,7 @@ if __name__=="__main__":
 			print token.lineno, token.type, token.value
 	else:
 		root = yacc.parse(inp, debug=("-d" in sys.argv))
-		if root != None:
+		if root == None:
+			print >>sys.stderr, "no input or syntax error"
+		else:
 			print root.pretty(0),
